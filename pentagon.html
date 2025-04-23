@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="description" content="CS4406 Computer Graphics - Assignment #2" />
+    <meta charset="utf-8" />
+    <title>Assignment 2</title>
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+        }
+        canvas { 
+            display: block; 
+        }
+        
+        #info-container {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(255, 255, 255, 0.6); /* White with 70% opacity */
+        padding: 15px;
+        border-radius: 10px;
+        max-width: 300px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        color: #000; /* Ensures text stays fully opaque */
+        }
+        
+        #info-content {
+            font-size: 14px;
+            color: #000000;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        #toggle-info {
+            background: rgb(0, 0, 0, 1.0); /* Dark gray with 90% opacity */
+            color: white; /* Fully opaque text */
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    
+    <div id="info-container">
+        <div id="info-content">
+            <h2>CS4406 Programming Assignment Unit 2</h2>
+            <p><strong>Date:</strong> April 23 2025</p>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Set the scene size
+        const WIDTH = 900, HEIGHT = 700;
+        
+        // Set camera attributes
+        const VIEW_ANGLE = 45, ASPECT = WIDTH / HEIGHT, NEAR = 0.1, FAR = 1000;
+        
+        // Get the container element
+        const container = document.getElementById('container');
+        
+        // Create a WebGL renderer, camera, and scene
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+        
+        // Position the camera
+        camera.position.z = 30;
+        
+        // Set renderer size and add to DOM
+        renderer.setSize(WIDTH, HEIGHT);
+        container.appendChild(renderer.domElement);
+        
+        // Create a 2D pentagon (5 vertices)
+        const pentagonShape = new THREE.Shape();
+        const radius = 5;
+        
+        // Start drawing the pentagon
+        pentagonShape.moveTo(radius * Math.cos(0), radius * Math.sin(0));
+        
+        // Add the remaining 4 vertices
+        for (let i = 1; i <= 5; i++) {
+            const angle = i * (Math.PI * 2) / 5;
+            pentagonShape.lineTo(
+                radius * Math.cos(angle),
+                radius * Math.sin(angle)
+            );
+        }
+        
+        // Convert shape to geometry (2D)
+        const geometry = new THREE.ShapeGeometry(pentagonShape);
+        
+        // Create material (blue color)
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0x0000FF, // Blue
+            side: THREE.DoubleSide
+        });
+        
+        // Create mesh and add to scene
+        const pentagon = new THREE.Mesh(geometry, material);
+        scene.add(pentagon);
+        
+        // Set the background color of the scene
+        scene.background = new THREE.Color(14204415); // White background
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotate the pentagon slowly
+            pentagon.rotation.z += 0.01;
+            pentagon.rotation.x += 0.01;
+            pentagon.rotation.y += 0.01;
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>
